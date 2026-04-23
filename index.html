@@ -11,174 +11,170 @@
     <style>
         :root {
             --bg: #060a10;
+            --bg-card: #0f1724;
             --accent: #00e5b0;
-            --accent-glow: rgba(0, 229, 176, 0.3);
+            --accent-glow: rgba(0, 229, 176, 0.2);
             --text-main: #e4ecf7;
             --text-dim: #9aaac4;
-            --glass: rgba(15, 23, 42, 0.8);
             --font-display: 'Syne', sans-serif;
             --font-body: 'Space Grotesk', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: var(--font-body);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg); color: var(--text-main); font-family: var(--font-body); line-height: 1.6; overflow-x: hidden; }
 
-        /* Modern Background Grain */
+        /* Background Grain Effect */
         body::before {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
             pointer-events: none; z-index: 100;
         }
 
-        /* ── TYPOGRAPHY ── */
-        h1, h2, h3 { font-family: var(--font-display); text-transform: uppercase; }
-        
-        .mono { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); letter-spacing: 1px; }
+        /* Typography */
+        h1, h2, h3 { font-family: var(--font-display); text-transform: uppercase; letter-spacing: -1px; }
+        .mono { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 2px; }
 
-        /* ── NAVIGATION ── */
+        /* Navigation */
         nav {
             position: fixed; width: 100%; top: 0; z-index: 1000;
-            padding: 1.5rem 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(15px);
-            background: rgba(6, 10, 16, 0.8);
+            padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); background: rgba(6, 10, 16, 0.85);
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        .logo { font-size: 1.2rem; font-weight: 800; color: var(--text-main); text-decoration: none; }
+        .logo { font-size: 1.2rem; font-weight: 800; text-decoration: none; color: #fff; }
         .logo span { color: var(--accent); }
 
-        /* ── HERO SECTION ── */
-        #hero {
-            min-height: 100vh;
-            padding: 10rem 5% 5rem;
-            display: flex; flex-direction: column; justify-content: center;
-            position: relative;
-        }
+        /* Hero */
+        #hero { min-height: 100vh; padding: 8rem 5% 4rem; display: flex; flex-direction: column; justify-content: center; }
+        .hero-title { font-size: clamp(2.8rem, 9vw, 5.5rem); line-height: 0.95; margin: 1.5rem 0; }
+        .hero-subtitle { font-size: 1.1rem; color: var(--text-dim); max-width: 550px; margin-bottom: 2.5rem; }
 
-        .hero-title {
-            font-size: clamp(3rem, 10vw, 6rem);
-            line-height: 0.9;
-            margin: 1.5rem 0;
-            letter-spacing: -2px;
-        }
+        /* Shared Styles */
+        section { padding: 6rem 5%; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; margin-bottom: 3rem; position: relative; }
+        .section-title::after { content: ""; position: absolute; bottom: -10px; left: 0; width: 50px; height: 4px; background: var(--accent); }
 
-        .hero-subtitle {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            color: var(--text-dim);
-            max-width: 600px;
-            margin-bottom: 3rem;
-        }
+        /* Skills Pill Layout */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2rem; }
+        .skill-tag { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 4px; font-size: 0.9rem; transition: 0.3s; }
+        .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* ── MODERN BUTTONS ── */
-        .btn {
-            display: inline-flex; align-items: center; gap: 0.8rem;
-            padding: 1rem 2rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            transition: 0.3s;
-            position: relative;
-        }
+        /* Timeline (Experience) */
+        .timeline { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 2rem; position: relative; }
+        .timeline-item { margin-bottom: 3rem; position: relative; }
+        .timeline-item::before { content: ""; position: absolute; left: -2.35rem; top: 5px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+        .time { font-family: var(--font-mono); color: var(--accent); font-size: 0.8rem; margin-bottom: 0.5rem; display: block; }
 
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
+        /* Project Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .card { background: var(--bg-card); padding: 2.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 35px var(--accent-glow);
-        }
+        /* Contact & Buttons */
+        .btn { display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: 0.3s; }
+        .btn-primary { background: var(--accent); color: var(--bg); box-shadow: 0 0 15px var(--accent-glow); }
+        .btn-secondary { border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+        .btn:hover { transform: translateY(-2px); }
 
-        /* ── CARDS (GLASSMORHISM) ── */
-        .card {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 2.5rem;
-            border-radius: 8px;
-            transition: 0.4s;
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        /* ── MOBILE RESPONSIVE FIXES ── */
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
-            nav { padding: 1rem 5%; }
             .hero-title { letter-spacing: -1px; }
-            .hero-subtitle { font-size: 1.1rem; line-height: 1.4; }
-            
-            .grid {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            /* Make text look tighter and more modern on small screens */
-            h2 { font-size: 2rem !important; }
-            p { font-size: 0.95rem; }
-        }
-
-        /* Glowing Orbs for Background */
-        .orb {
-            position: absolute;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            z-index: -1;
-            filter: blur(50px);
+            section { padding: 4rem 5%; }
+            .section-title { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
-    <div class="orb" style="top: 10%; right: -100px;"></div>
-    <div class="orb" style="bottom: 10%; left: -100px; opacity: 0.5;"></div>
 
     <nav>
         <a href="#" class="logo">SISAY<span>BARANA</span></a>
-        <div class="nav-links">
-            </div>
-        <a href="#contact" class="btn btn-primary" style="padding: 0.5rem 1rem;">Let's Talk</a>
+        <a href="asset/Sisay_April_CV.pdf" class="btn btn-primary" style="padding: 0.5rem 1rem;">CV <i class="fas fa-download"></i></a>
     </nav>
 
     <main id="hero">
-        <p class="mono">// SYSTEM ADMINISTRATOR & ERP EXPERT</p>
+        <p class="mono">// SYSTEM ADMINISTRATOR & ERP SPECIALIST</p>
         <h1 class="hero-title">ENGINEERING <br><span style="color: var(--accent)">EFFICIENCY.</span></h1>
         <p class="hero-subtitle">
-            Specializing in Odoo ERP systems, network infrastructure, and full-stack development. Turning complex business requirements into seamless digital experiences.
+            Based in Addis Ababa. I bridge the gap between complex IT infrastructure and business growth through Odoo ERP mastery and robust system administration.
         </p>
-        
-        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-            <a href="#projects" class="btn btn-primary">Explore Work <i class="fas fa-arrow-right"></i></a>
-            <a href="asset/Sisay_April_CV.pdf" class="btn" style="border: 1px solid rgba(255,255,255,0.2); color: white;">Download CV</a>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="#projects" class="btn btn-primary">View Projects</a>
+            <a href="#contact" class="btn btn-secondary">Contact Me</a>
         </div>
     </main>
 
-    <section style="padding: 5rem 5%;">
-        <h2 style="margin-bottom: 3rem;">Selected Projects</h2>
-        <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-            <div class="card">
-                <p class="mono" style="margin-bottom: 1rem;">Odoo ERP</p>
-                <h3>Enterprise Payroll</h3>
-                <p style="color: var(--text-dim); margin: 1rem 0;">Full implementation of a custom payroll module for 500+ employees.</p>
-                <a href="#" style="color: var(--accent); text-decoration: none; font-weight: bold; font-size: 0.8rem;">VIEW CASE STUDY →</a>
+    <section id="experience">
+        <h2 class="section-title">Experience</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <span class="time">2025 - PRESENT</span>
+                <h3>System Administrator & IT Manager</h3>
+                <p style="color: var(--text-dim);">Leading IT infrastructure, Odoo ERP configuration, and team management for Semina Werk Technology Solution.</p>
             </div>
+            <div class="timeline-item">
+                <span class="time">PREVIOUS</span>
+                <h3>ERP Officer & ICT Coordinator</h3>
+                <p style="color: var(--text-dim);">Managed enterprise-level software deployments and educational IT programs.</p>
             </div>
+        </div>
     </section>
+
+    <section id="skills">
+        <h2 class="section-title">Technical Arsenal</h2>
+        <div class="skills-container">
+            <span class="skill-tag">Odoo ERP (Payroll, Inventory, Manufacturing)</span>
+            <span class="skill-tag">Linux Server Management</span>
+            <span class="skill-tag">React / Next.js</span>
+            <span class="skill-tag">Python & MySQL</span>
+            <span class="skill-tag">Network Security</span>
+            <span class="skill-tag">Hardware Maintenance</span>
+            <span class="skill-tag">Amharic Technical Translation</span>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title">Key Projects</h2>
+        <div class="grid">
+            <div class="card">
+                <p class="mono">ERP IMPLEMENTATION</p>
+                <h3>Odoo Manufacturing & Payroll</h3>
+                <p style="color: var(--text-dim); margin: 1rem 0;">Custom module development for automated invoicing and multi-department payroll processing.</p>
+            </div>
+            <div class="card">
+                <p class="mono">IT INFRASTRUCTURE</p>
+                <h3>Multi-User Accounting Setup</h3>
+                <p style="color: var(--text-dim); margin: 1rem 0;">Configuration of Peachtree and network environments for synchronized multi-user access.</p>
+            </div>
+            <div class="card">
+                <p class="mono">WEB DEVELOPMENT</p>
+                <h3>Portfolio 2.0</h3>
+                <p style="color: var(--text-dim); margin: 1rem 0;">Responsive next-gen developer portfolio showcasing modern UI/UX and system capabilities.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="education">
+        <h2 class="section-title">Education</h2>
+        <div class="card" style="display: flex; align-items: center; gap: 2rem;">
+            <i class="fas fa-university" style="font-size: 2rem; color: var(--accent);"></i>
+            <div>
+                <h3>BA in Accounting & Finance</h3>
+                <p style="color: var(--text-dim);">Admas University</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="text-align: center;">
+        <h2 class="section-title" style="margin-left: auto; margin-right: auto; width: fit-content;">Get In Touch</h2>
+        <p style="margin-bottom: 2rem; color: var(--text-dim);">Ready to optimize your systems? Let's discuss your next project.</p>
+        <a href="mailto:sisaybarana@gmail.com" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.5rem 3rem;">Start A Conversation</a>
+    </section>
+
+    <footer style="padding: 4rem 5%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-dim); font-size: 0.8rem;">
+        <p>© 2026 SISAY BARANA. Built for Performance.</p>
+    </footer>
 
 </body>
 </html>
