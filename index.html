@@ -123,26 +123,67 @@
         /* ── BANNER ── */
         #banner { padding: 0 5%; max-width: 1200px; margin: 0 auto 2rem; }
         .banner-box {
-            border: 2px dashed rgba(0,229,176,0.3);
             border-radius: 8px;
-            background: var(--bg-card);
-            height: 220px;
+            background: #0a0d14;
+            height: 260px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 1rem;
+            gap: 0.8rem;
             position: relative; overflow: hidden;
             cursor: pointer; transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.06);
         }
+        /* diagonal teal streaks — left side */
         .banner-box::before {
             content: "";
-            position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(0,229,176,0.04) 0%, transparent 60%);
+            position: absolute; top: -20px; left: -10px;
+            width: 18px; height: 120%;
+            background: rgba(0,229,176,0.55);
+            transform: skewX(-18deg);
+            box-shadow: 30px 0 0 8px rgba(0,229,176,0.25), 58px 0 0 4px rgba(0,229,176,0.12);
         }
-        .banner-box:hover { border-color: var(--accent); background: rgba(0,229,176,0.04); }
-        .banner-icon { font-size: 2.5rem; color: var(--accent); opacity: 0.6; }
-        .banner-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); letter-spacing: 2px; text-align: center; }
-        .banner-sublabel { font-size: 0.75rem; color: rgba(154,170,196,0.5); }
-        #bannerInput { display: none; }
-        #bannerPreview { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+        /* diagonal teal streaks — right side */
+        .banner-box::after {
+            content: "";
+            position: absolute; top: -20px; right: -10px;
+            width: 18px; height: 120%;
+            background: rgba(0,229,176,0.55);
+            transform: skewX(-18deg);
+            box-shadow: -30px 0 0 8px rgba(0,229,176,0.25), -58px 0 0 4px rgba(0,229,176,0.12);
+        }
+        .banner-box:hover { border-color: rgba(0,229,176,0.15); }
+        .banner-big-text {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 6vw, 3.8rem);
+            color: #e03030;
+            line-height: 1;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            position: relative; z-index: 1;
+        }
+        .banner-sub-text {
+            font-size: 1rem;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-weight: 400;
+            position: relative; z-index: 1;
+        }
+        .banner-upload-hint {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative; z-index: 1;
+            margin-top: 0.4rem;
+            border: 1px solid rgba(0,229,176,0.3);
+            padding: 5px 14px;
+            border-radius: 3px;
+            transition: 0.3s;
+            cursor: pointer;
+            background: none;
+        }
+        .banner-upload-hint:hover { background: rgba(0,229,176,0.08); border-color: var(--accent); }
+        #bannerImg { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; position: absolute; inset: 0; z-index: 2; display: none; }
 
         /* ── SKILLS ── */
         .skills-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
@@ -278,7 +319,7 @@
     <!-- ── HERO ── -->
     <main id="hero">
         <p class="mono">// SYSTEM ADMINISTRATOR & ERP SPECIALIST</p>
-        <h1 class="hero-title">ENGINEERING <br><span style="color: var(--accent)">EFFICIENCY.</span></h1>
+        <h1 class="hero-title">OPERATIONAL <br><span style="color: var(--accent)">EXCELLENCE.</span></h1>
         <p class="hero-subtitle">
             Accomplished System Administrator with expertise in streamlining business workflows, Odoo ERP customization, and aligning technology with organizational goals.
         </p>
@@ -295,15 +336,14 @@
 
     <!-- ── BANNER ── -->
     <div id="banner" class="fade-in">
-        <div class="banner-box" onclick="document.getElementById('bannerInput').click()">
-            <img id="bannerPreview" src="" alt="" style="display:none;" />
-            <div id="bannerPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;">
-                <i class="fas fa-image banner-icon"></i>
-                <span class="banner-label">GRAPHIC DESIGN BANNER</span>
-                <span class="banner-sublabel">Click to upload your designed banner here</span>
+        <div class="banner-box">
+            <img id="bannerImg" src="" alt="Design Banner" />
+            <div id="bannerPlaceholder">
+                <div class="banner-big-text">Your Design</div>
+                <div class="banner-sub-text">Graphic Design Showcase</div>
+                <button class="banner-upload-hint" onclick="bannerAuth()">↑ Update Banner</button>
             </div>
         </div>
-        <input type="file" id="bannerInput" accept="image/*" />
     </div>
 
     <!-- ── ABOUT ── -->
@@ -321,7 +361,8 @@
             </div>
             <div style="display:flex;justify-content:center;">
                 <div class="avatar-box">
-                    <span class="avatar-initials">SB</span>
+                    <img src="asset/sisay.jpg" alt="Sisay Barana" style="width:100%;height:100%;object-fit:cover;border-radius:7px;position:relative;z-index:1;" onerror="this.style.display='none';document.getElementById('avatarFallback').style.display='flex';" />
+                    <span id="avatarFallback" class="avatar-initials" style="display:none;">SB</span>
                 </div>
             </div>
         </div>
@@ -599,6 +640,30 @@
         </div>
     </section>
 
+    <!-- ── BANNER PASSWORD MODAL ── -->
+    <div id="bannerModal" style="display:none; position:fixed; inset:0; z-index:2000; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); align-items:center; justify-content:center;">
+        <div style="background:#0f1724; border:1px solid rgba(0,229,176,0.3); border-radius:10px; padding:2.5rem; width:90%; max-width:420px; display:flex; flex-direction:column; gap:1.2rem; position:relative;">
+            <button onclick="closeBannerModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#9aaac4;font-size:1.2rem;cursor:pointer;">&#x2715;</button>
+            <p class="mono" style="margin:0;">// ADMIN ACCESS</p>
+            <h3 style="font-size:1.2rem; margin:0;">Update Banner</h3>
+            <p style="color:#9aaac4; font-size:0.82rem; margin:0;">Enter your password, then paste the raw GitHub image URL of your banner.</p>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <label style="font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:#9aaac4; letter-spacing:2px; text-transform:uppercase;">Password</label>
+                <input id="bannerPassword" type="password" placeholder="Enter password" style="background:#060a10; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:0.75rem 1rem; color:#e4ecf7; font-family:'Space Grotesk',sans-serif; font-size:0.9rem; outline:none;" />
+                <span id="bannerAuthError" style="color:#e03030; font-size:0.78rem; font-family:'JetBrains Mono',monospace; display:none;">// Incorrect password.</span>
+            </div>
+            <div id="bannerUrlSection" style="display:none; flex-direction:column; gap:6px;">
+                <label style="font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:#9aaac4; letter-spacing:2px; text-transform:uppercase;">GitHub Raw Image URL</label>
+                <input id="bannerUrlInput" type="text" placeholder="https://raw.githubusercontent.com/sisaybarana/..." style="background:#060a10; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:0.75rem 1rem; color:#e4ecf7; font-family:'Space Grotesk',sans-serif; font-size:0.82rem; outline:none;" />
+                <span style="font-size:0.72rem; color:#9aaac4; font-family:'JetBrains Mono',monospace; line-height:1.6;">
+                    Go to your image on GitHub → click <strong style="color:#00e5b0;">Raw</strong> → copy that URL and paste here.
+                </span>
+                <span id="bannerUrlError" style="color:#e03030; font-size:0.78rem; font-family:'JetBrains Mono',monospace; display:none;">// Invalid URL. Must start with https://</span>
+            </div>
+            <button id="modalBtn" onclick="confirmBannerAuth()" style="background:#00e5b0; color:#060a10; border:none; padding:0.85rem; border-radius:4px; font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:700; letter-spacing:2px; cursor:pointer; transition:0.3s;">UNLOCK</button>
+        </div>
+    </div>
+
     <!-- ── FOOTER ── -->
     <footer>
         <div class="footer-social">
@@ -641,19 +706,69 @@
             });
         });
 
-        // Banner upload
-        document.getElementById('bannerInput').addEventListener('change', function() {
-            const file = this.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = e => {
-                const preview = document.getElementById('bannerPreview');
-                const placeholder = document.getElementById('bannerPlaceholder');
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                placeholder.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+        // Banner — GitHub URL system
+        const BANNER_PASSWORD = "Sisay@2026";
+        let bannerUnlocked = false;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('sisay_banner_url');
+            if (saved) loadBannerUrl(saved);
+        });
+
+        function bannerAuth() {
+            bannerUnlocked = false;
+            document.getElementById('bannerPassword').value = '';
+            document.getElementById('bannerAuthError').style.display = 'none';
+            document.getElementById('bannerUrlSection').style.display = 'none';
+            document.getElementById('bannerUrlInput').value = '';
+            document.getElementById('bannerUrlError').style.display = 'none';
+            document.getElementById('modalBtn').textContent = 'UNLOCK';
+            document.getElementById('bannerModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('bannerPassword').focus(), 100);
+        }
+        function closeBannerModal() {
+            document.getElementById('bannerModal').style.display = 'none';
+            bannerUnlocked = false;
+        }
+        function confirmBannerAuth() {
+            if (!bannerUnlocked) {
+                const val = document.getElementById('bannerPassword').value;
+                if (val === BANNER_PASSWORD) {
+                    bannerUnlocked = true;
+                    document.getElementById('bannerAuthError').style.display = 'none';
+                    document.getElementById('bannerUrlSection').style.display = 'flex';
+                    document.getElementById('modalBtn').textContent = 'APPLY BANNER';
+                    setTimeout(() => document.getElementById('bannerUrlInput').focus(), 100);
+                } else {
+                    document.getElementById('bannerAuthError').style.display = 'block';
+                    document.getElementById('bannerPassword').value = '';
+                    document.getElementById('bannerPassword').focus();
+                }
+            } else {
+                const url = document.getElementById('bannerUrlInput').value.trim();
+                if (!url.startsWith('https://')) {
+                    document.getElementById('bannerUrlError').style.display = 'block';
+                    return;
+                }
+                localStorage.setItem('sisay_banner_url', url);
+                loadBannerUrl(url);
+                closeBannerModal();
+            }
+        }
+        function loadBannerUrl(url) {
+            const img = document.getElementById('bannerImg');
+            const placeholder = document.getElementById('bannerPlaceholder');
+            img.src = url;
+            img.style.display = 'block';
+            img.onerror = () => { img.style.display = 'none'; placeholder.style.display = 'flex'; };
+            img.onload = () => { placeholder.style.display = 'none'; };
+        }
+        document.getElementById('bannerModal').addEventListener('click', function(e) {
+            if (e.target === this) closeBannerModal();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && document.getElementById('bannerModal').style.display === 'flex') confirmBannerAuth();
+            if (e.key === 'Escape') closeBannerModal();
         });
 
         // Contact form — mailto fallback
@@ -668,4 +783,4 @@
         }
     </script>
 </body>
-</html>
+</html>.
