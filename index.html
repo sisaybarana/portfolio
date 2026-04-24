@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    
+
     <style>
         :root {
             --bg: #060a10;
@@ -34,144 +34,638 @@
         h1, h2, h3 { font-family: var(--font-display); text-transform: uppercase; letter-spacing: -1px; }
         .mono { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 2px; }
 
+        /* ── NAV ── */
         nav {
             position: fixed; width: 100%; top: 0; z-index: 1000;
-            padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(15px); background: rgba(6, 10, 16, 0.85);
+            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); background: rgba(6, 10, 16, 0.92);
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: padding 0.3s;
         }
-        .logo { font-size: 1.2rem; font-weight: 800; text-decoration: none; color: #fff; }
+        .logo { font-size: 1.2rem; font-weight: 800; text-decoration: none; color: #fff; font-family: var(--font-display); }
         .logo span { color: var(--accent); }
 
+        .nav-links {
+            display: flex; gap: 2rem; list-style: none; align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none; font-size: 0.82rem;
+            font-family: var(--font-mono); letter-spacing: 1.5px; text-transform: uppercase;
+            transition: color 0.3s; position: relative; padding-bottom: 2px;
+        }
+        .nav-links a::after {
+            content: ""; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
+            background: var(--accent); transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-cv { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.78rem; background: var(--accent); color: var(--bg); box-shadow: 0 0 15px var(--accent-glow); transition: 0.3s; font-family: var(--font-mono); }
+        .nav-cv:hover { box-shadow: 0 0 25px rgba(0,229,176,0.4); }
+
+        /* hamburger */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 5px; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--text-main); transition: 0.3s; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .mobile-menu {
+            display: none; position: fixed; top: 62px; left: 0; width: 100%; z-index: 999;
+            background: rgba(6,10,16,0.97); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 1.5rem 5%; flex-direction: column; gap: 1.2rem;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a { color: var(--text-dim); text-decoration: none; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
+        .mobile-menu a:hover { color: var(--accent); }
+
+        /* ── HERO ── */
         #hero { min-height: 100vh; padding: 8rem 5% 4rem; display: flex; flex-direction: column; justify-content: center; }
         .hero-title { font-size: clamp(2.8rem, 9vw, 5.5rem); line-height: 0.95; margin: 1.5rem 0; }
-        .hero-subtitle { font-size: 1.1rem; color: var(--text-dim); max-width: 550px; margin-bottom: 2.5rem; }
+        .hero-subtitle { font-size: 1.05rem; color: var(--text-dim); max-width: 550px; margin-bottom: 2.5rem; }
 
+        .hero-stats { display: flex; gap: 2.5rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+        .stat { display: flex; flex-direction: column; }
+        .stat-num { font-family: var(--font-display); font-size: 2rem; color: var(--accent); line-height: 1; }
+        .stat-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-top: 3px; }
+
+        /* ── SECTIONS ── */
         section { padding: 6rem 5%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 2.5rem; margin-bottom: 3rem; position: relative; }
         .section-title::after { content: ""; position: absolute; bottom: -10px; left: 0; width: 50px; height: 4px; background: var(--accent); }
 
-        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2rem; }
-        .skill-tag { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 4px; font-size: 0.9rem; transition: 0.3s; }
+        /* ── ABOUT ── */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .about-text p { color: var(--text-dim); margin-bottom: 1rem; }
+        .about-info { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+        .info-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); padding: 1rem; border-radius: 6px; }
+        .info-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 4px; }
+        .info-value { font-size: 0.88rem; color: var(--text-main); }
+
+        .avatar-box {
+            width: 100%; aspect-ratio: 1;
+            background: var(--bg-card);
+            border: 1px solid rgba(0,229,176,0.2);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+            max-width: 340px;
+        }
+        .avatar-box::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0,229,176,0.06), transparent 60%);
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .avatar-initials { font-family: var(--font-display); font-size: 4rem; color: var(--accent); position: relative; z-index: 1; opacity: 0.7; }
+
+        /* ── BANNER ── */
+        #banner { padding: 0 5%; max-width: 1200px; margin: 0 auto 2rem; }
+        .banner-box {
+            border: 2px dashed rgba(0,229,176,0.3);
+            border-radius: 8px;
+            background: var(--bg-card);
+            height: 220px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 1rem;
+            position: relative; overflow: hidden;
+            cursor: pointer; transition: 0.3s;
+        }
+        .banner-box::before {
+            content: "";
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(0,229,176,0.04) 0%, transparent 60%);
+        }
+        .banner-box:hover { border-color: var(--accent); background: rgba(0,229,176,0.04); }
+        .banner-icon { font-size: 2.5rem; color: var(--accent); opacity: 0.6; }
+        .banner-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); letter-spacing: 2px; text-align: center; }
+        .banner-sublabel { font-size: 0.75rem; color: rgba(154,170,196,0.5); }
+        #bannerInput { display: none; }
+        #bannerPreview { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+
+        /* ── SKILLS ── */
+        .skills-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .skill-category { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 1.8rem; transition: 0.3s; }
+        .skill-category:hover { border-color: rgba(0,229,176,0.3); }
+        .category-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 3px; margin-bottom: 1.2rem; }
+        .skill-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill-tag { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 4px; font-size: 0.82rem; transition: 0.3s; color: var(--text-dim); }
         .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
 
+        /* ── EXPERIENCE ── */
         .timeline { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 2rem; position: relative; }
         .timeline-item { margin-bottom: 3rem; position: relative; }
         .timeline-item::before { content: ""; position: absolute; left: -2.35rem; top: 5px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
         .time { font-family: var(--font-mono); color: var(--accent); font-size: 0.8rem; margin-bottom: 0.5rem; display: block; }
+        .exp-bullets { color: var(--text-dim); margin-top: 0.5rem; padding-left: 1.2rem; }
+        .exp-bullets li { margin-bottom: 0.3rem; font-size: 0.92rem; }
 
+        /* ── PROJECTS ── */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .card { background: var(--bg-card); padding: 2.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
+        .card { background: var(--bg-card); padding: 2.2rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
         .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .card-icon { font-size: 1.8rem; color: var(--accent); margin-bottom: 1rem; opacity: 0.8; }
 
-        .btn { display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: 0.3s; }
+        /* ── ODOO MODULES ── */
+        .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
+        .module-card {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px; padding: 1.5rem;
+            display: flex; gap: 1rem; align-items: flex-start;
+            transition: 0.3s; cursor: default;
+        }
+        .module-card:hover { border-color: rgba(0,229,176,0.4); transform: translateY(-3px); }
+        .module-icon { width: 40px; height: 40px; border-radius: 8px; background: rgba(0,229,176,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .module-icon i { color: var(--accent); font-size: 1rem; }
+        .module-name { font-family: var(--font-display); font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .module-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+
+        /* ── EDUCATION ── */
+        .edu-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 2rem 2.5rem; display: flex; align-items: center; gap: 2rem; transition: 0.3s; }
+        .edu-card:hover { border-color: rgba(0,229,176,0.3); }
+
+        /* ── CONTACT ── */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+        .contact-methods { display: flex; flex-direction: column; gap: 1.2rem; }
+        .contact-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; text-decoration: none; color: var(--text-main); transition: 0.3s; }
+        .contact-item:hover { border-color: var(--accent); color: var(--accent); transform: translateX(5px); }
+        .contact-item i { font-size: 1.1rem; color: var(--accent); width: 20px; text-align: center; }
+        .contact-text { display: flex; flex-direction: column; }
+        .contact-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; }
+        .contact-value { font-size: 0.9rem; }
+
+        .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+        .form-group input, .form-group textarea {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px; padding: 0.8rem 1rem; color: var(--text-main);
+            font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: 0.3s;
+            resize: vertical;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+        .btn-send { background: var(--accent); color: var(--bg); border: none; padding: 0.9rem 2rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 0.6rem; }
+        .btn-send:hover { box-shadow: 0 0 20px rgba(0,229,176,0.4); }
+
+        /* ── BTN ── */
+        .btn { display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: 0.3s; font-family: var(--font-mono); }
         .btn-primary { background: var(--accent); color: var(--bg); box-shadow: 0 0 15px var(--accent-glow); }
         .btn-secondary { border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+        .btn-primary:hover { box-shadow: 0 0 25px rgba(0,229,176,0.4); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
+        /* ── FOOTER ── */
+        footer { padding: 4rem 5%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-dim); font-size: 0.82rem; }
+        .footer-social { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .footer-social a { color: var(--text-dim); font-size: 1.1rem; transition: 0.3s; }
+        .footer-social a:hover { color: var(--accent); transform: translateY(-2px); display: inline-block; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .avatar-box { max-width: 200px; }
+            .contact-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
             .hero-title { letter-spacing: -1px; }
             section { padding: 4rem 5%; }
             .section-title { font-size: 1.8rem; }
+            .about-info { grid-template-columns: 1fr; }
+            .edu-card { flex-direction: column; gap: 1rem; }
         }
+
+        /* scroll fade-in */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="#" class="logo">SISAY<span>BARANA</span></a>
-        <a href="asset/Sisay_April_CV.pdf" class="btn btn-primary" style="padding: 0.5rem 1rem;">CV <i class="fas fa-download"></i></a>
+    <!-- ── NAVBAR ── -->
+    <nav id="navbar">
+        <a href="#hero" class="logo">SISAY<span>BARANA</span></a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#odoo-modules">Odoo Modules</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <a href="asset/Sisay_April_CV.pdf" class="nav-cv">CV <i class="fas fa-download"></i></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
     </nav>
 
+    <!-- ── MOBILE MENU ── -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" onclick="closeMobile()">About</a>
+        <a href="#experience" onclick="closeMobile()">Experience</a>
+        <a href="#projects" onclick="closeMobile()">Projects</a>
+        <a href="#odoo-modules" onclick="closeMobile()">Odoo Modules</a>
+        <a href="#skills" onclick="closeMobile()">Skills</a>
+        <a href="#education" onclick="closeMobile()">Education</a>
+        <a href="#contact" onclick="closeMobile()">Contact</a>
+    </div>
+
+    <!-- ── HERO ── -->
     <main id="hero">
         <p class="mono">// SYSTEM ADMINISTRATOR & ERP SPECIALIST</p>
         <h1 class="hero-title">ENGINEERING <br><span style="color: var(--accent)">EFFICIENCY.</span></h1>
         <p class="hero-subtitle">
-            Accomplished System Administrator[cite: 3]. Expertise in streamlining business workflows [cite: 4] and aligning technology with organizational goals[cite: 5].
+            Accomplished System Administrator with expertise in streamlining business workflows, Odoo ERP customization, and aligning technology with organizational goals.
         </p>
+        <div class="hero-stats">
+            <div class="stat"><span class="stat-num">6+</span><span class="stat-label">Odoo Modules Developed</span></div>
+            <div class="stat"><span class="stat-num">3+</span><span class="stat-label">Years Experience</span></div>
+            <div class="stat"><span class="stat-num">2</span><span class="stat-label">Active Roles</span></div>
+        </div>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="#projects" class="btn btn-primary">View Projects</a>
-            <a href="mailto:sisaybarana@gmail.com" class="btn btn-secondary">Contact Me</a>
+            <a href="#contact" class="btn btn-secondary">Contact Me</a>
         </div>
     </main>
 
-    <section id="experience">
+    <!-- ── BANNER ── -->
+    <div id="banner" class="fade-in">
+        <div class="banner-box" onclick="document.getElementById('bannerInput').click()">
+            <img id="bannerPreview" src="" alt="" style="display:none;" />
+            <div id="bannerPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;">
+                <i class="fas fa-image banner-icon"></i>
+                <span class="banner-label">GRAPHIC DESIGN BANNER</span>
+                <span class="banner-sublabel">Click to upload your designed banner here</span>
+            </div>
+        </div>
+        <input type="file" id="bannerInput" accept="image/*" />
+    </div>
+
+    <!-- ── ABOUT ── -->
+    <section id="about" class="fade-in">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>I'm Sisay Barana — a System Administrator and ERP Specialist based in Addis Ababa, Ethiopia, with hands-on expertise in Odoo ERP customization, workflow automation, and network infrastructure management.</p>
+                <p style="margin-top:1rem;">My background blends deep technical skill with a passion for making systems work smarter. From upgrading Odoo 13 → 19 to developing custom modules like Store Request, Query Deluxe, and Check Payment, I specialize in turning complex business requirements into elegant technical solutions.</p>
+                <p style="margin-top:1rem;">Beyond systems, I'm also a graphic designer — bringing creativity and precision to everything I build, whether it's a UI, a dashboard, or a brand asset.</p>
+                <div style="margin-top:1.8rem;display:flex;gap:1rem;flex-wrap:wrap;">
+                    <a href="https://www.linkedin.com/in/sisay-barana" target="_blank" class="btn btn-secondary" style="font-size:0.75rem;padding:0.6rem 1.2rem;"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a href="mailto:sisaybarana@gmail.com" class="btn btn-secondary" style="font-size:0.75rem;padding:0.6rem 1.2rem;"><i class="fas fa-envelope"></i> Email</a>
+                </div>
+            </div>
+            <div style="display:flex;justify-content:center;">
+                <div class="avatar-box">
+                    <span class="avatar-initials">SB</span>
+                </div>
+            </div>
+        </div>
+        <div class="about-info" style="margin-top:3rem;">
+            <div class="info-item">
+                <div class="info-label">Location</div>
+                <div class="info-value">Addis Ababa, Ethiopia</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">sisaybarana@gmail.com</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Phone</div>
+                <div class="info-value">+251 936 481 454</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Specialization</div>
+                <div class="info-value">Odoo ERP & Sysadmin</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── EXPERIENCE ── -->
+    <section id="experience" class="fade-in">
         <h2 class="section-title">Experience</h2>
         <div class="timeline">
             <div class="timeline-item">
-                <span class="time">JUNE 2025 - PRESENT</span>
+                <span class="time">JUNE 2025 – PRESENT</span>
                 <h3>System Administrator</h3>
-                <p class="mono">Roha Pack PLC, Addis Ababa [cite: 24]</p>
-                <p style="color: var(--text-dim); margin-top: 0.5rem;">Managing website, Email, and Odoo ERP systems[cite: 25].</p>
+                <p class="mono" style="margin-top:4px;">Roha Pack PLC, Addis Ababa</p>
+                <ul class="exp-bullets">
+                    <li>Managing website, corporate email, and Odoo ERP systems enterprise-wide.</li>
+                    <li>Overseeing network infrastructure, server maintenance, and IT security.</li>
+                    <li>Providing technical support and user training across departments.</li>
+                </ul>
             </div>
             <div class="timeline-item">
                 <span class="time">PREVIOUS ROLE</span>
                 <h3>Odoo ERP Officer</h3>
-                <p class="mono">Roha Pack PLC [cite: 27]</p>
-                <ul style="color: var(--text-dim); margin-top: 0.5rem; padding-left: 1rem;">
-                    <li>Led the version upgrade of Odoo 13 to Odoo 19.</li>
-                    <li>Managed ERP support for Sales, Production, Accounting, and HR[cite: 28].</li>
-                    <li>Developed custom reports and automated workflows[cite: 31].</li>
+                <p class="mono" style="margin-top:4px;">Roha Pack PLC</p>
+                <ul class="exp-bullets">
+                    <li>Led the version upgrade of Odoo 13 to Odoo 19 — full data migration & validation.</li>
+                    <li>Managed ERP support for Sales, Production, Accounting, Inventory, and HR modules.</li>
+                    <li>Developed 6+ custom Odoo modules to meet unique business needs.</li>
+                    <li>Created custom reports, automated workflows, and provided staff training.</li>
+                    <li>Configured sub-menus in Accounting and designed role-based access controls.</li>
                 </ul>
             </div>
             <div class="timeline-item">
-                <span class="time">2023 - 2024</span>
+                <span class="time">2023 – 2024</span>
                 <h3>Main Teacher</h3>
-                <p class="mono">South West Academy, Addis Ababa [cite: 36]</p>
-                <p style="color: var(--text-dim); margin-top: 0.5rem;">Delivered lesson plans and conducted academic assessments[cite: 37].</p>
+                <p class="mono" style="margin-top:4px;">South West Academy, Addis Ababa</p>
+                <ul class="exp-bullets">
+                    <li>Delivered comprehensive lesson plans for ICT and technical subjects.</li>
+                    <li>Conducted academic assessments and student performance reviews.</li>
+                </ul>
+            </div>
+            <div class="timeline-item">
+                <span class="time">EARLIER</span>
+                <h3>ICT Coordinator</h3>
+                <p class="mono" style="margin-top:4px;">Humbo Tebela Town — Mahibereseb Mereja Maikel</p>
+                <ul class="exp-bullets">
+                    <li>Led ICT coordination for the Community Information Center.</li>
+                    <li>Managed hardware, software, and digital literacy programs for the community.</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <section id="projects">
+    <!-- ── PROJECTS ── -->
+    <section id="projects" class="fade-in">
         <h2 class="section-title">Technical Projects</h2>
         <div class="grid">
             <div class="card">
-                <p class="mono">BROWSER EXTENSION</p>
-                <h3>Chrome Ad-Blocker</h3>
-                <p style="color: var(--text-dim); margin: 1rem 0;">Developed a custom Chrome extension designed to block intrusive advertisements for a cleaner browsing experience.</p>
+                <div class="card-icon"><i class="fab fa-chrome"></i></div>
+                <p class="mono" style="margin-bottom:0.5rem;">BROWSER EXTENSION</p>
+                <h3 style="margin-bottom:0.8rem;">Chrome Ad-Blocker</h3>
+                <p style="color: var(--text-dim); font-size:0.88rem;">Developed a custom Chrome extension that blocks intrusive advertisements, delivering a cleaner and faster browsing experience through intelligent content filtering.</p>
             </div>
             <div class="card">
-                <p class="mono">ERP EVOLUTION</p>
-                <h3>Odoo 13 to 19 Upgrade</h3>
-                <p style="color: var(--text-dim); margin: 1rem 0;">Successfully migrated legacy enterprise systems to the latest Odoo framework, ensuring data accuracy and improved UI.</p>
+                <div class="card-icon"><i class="fas fa-database"></i></div>
+                <p class="mono" style="margin-bottom:0.5rem;">ERP EVOLUTION</p>
+                <h3 style="margin-bottom:0.8rem;">Odoo 13 → 19 Upgrade</h3>
+                <p style="color: var(--text-dim); font-size:0.88rem;">Successfully migrated legacy enterprise systems to the latest Odoo framework, ensuring data accuracy, improved UI/UX, and maintaining zero data loss throughout the migration.</p>
             </div>
             <div class="card">
-                <p class="mono">ICT COORDINATION</p>
-                <h3>Community Information Center</h3>
-                <p style="color: var(--text-dim); margin: 1rem 0;">Led ICT coordination for the Humbo Tebela Town "Mahibereseb Mereja Maikel"[cite: 44].</p>
+                <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                <p class="mono" style="margin-bottom:0.5rem;">ICT COORDINATION</p>
+                <h3 style="margin-bottom:0.8rem;">Community Information Center</h3>
+                <p style="color: var(--text-dim); font-size:0.88rem;">Led ICT coordination for Humbo Tebela Town's Community Information Center, establishing infrastructure, digital literacy programs, and ongoing technical support.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-palette"></i></div>
+                <p class="mono" style="margin-bottom:0.5rem;">GRAPHIC DESIGN</p>
+                <h3 style="margin-bottom:0.8rem;">Brand & Visual Assets</h3>
+                <p style="color: var(--text-dim); font-size:0.88rem;">Designed professional banners, posters, and digital brand assets for clients and organizations, merging technical precision with creative visual communication.</p>
             </div>
         </div>
     </section>
 
-    <section id="skills">
+    <!-- ── ODOO MODULES ── -->
+    <section id="odoo-modules" class="fade-in">
+        <h2 class="section-title">Odoo Modules Developed</h2>
+        <p style="color:var(--text-dim);margin-bottom:2rem;margin-top:-1.5rem;font-size:0.9rem;">Custom modules built and deployed in production environments at Roha Pack PLC.</p>
+        <div class="modules-grid">
+            <div class="module-card">
+                <div class="module-icon"><i class="fas fa-boxes-stacked"></i></div>
+                <div>
+                    <div class="module-name">Store Request</div>
+                    <div class="module-desc">Internal store requisition workflow — request, approve, and fulfill inventory items with full audit trail.</div>
+                </div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fas fa-database"></i></div>
+                <div>
+                    <div class="module-name">Query Deluxe</div>
+                    <div class="module-desc">Full CRUD interface for custom database queries — enabling power users to interact with data directly within Odoo.</div>
+                </div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fas fa-cart-plus"></i></div>
+                <div>
+                    <div class="module-name">Purchase Request</div>
+                    <div class="module-desc">Streamlined procurement initiation — staff submit requests that route through an approval chain before becoming purchase orders.</div>
+                </div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fas fa-money-check"></i></div>
+                <div>
+                    <div class="module-name">Check Payment</div>
+                    <div class="module-desc">Custom payment module for managing check-based transactions with validation, printing, and bank reconciliation support.</div>
+                </div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fas fa-sitemap"></i></div>
+                <div>
+                    <div class="module-name">Accounting Sub-Menus</div>
+                    <div class="module-desc">Custom navigation structure within Odoo Accounting — tailored menu hierarchy to match company-specific workflow and reporting needs.</div>
+                </div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon"><i class="fas fa-file-code"></i></div>
+                <div>
+                    <div class="module-name">Custom Reports</div>
+                    <div class="module-desc">Bespoke QWeb report templates for sales, inventory, and HR — branded, data-rich, and print-ready PDFs.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── SKILLS ── -->
+    <section id="skills" class="fade-in">
         <h2 class="section-title">Core Skills</h2>
-        <div class="skills-container">
-            <span class="skill-tag">Odoo ERP Management [cite: 3]</span>
-            <span class="skill-tag">System Administration [cite: 3]</span>
-            <span class="skill-tag">Digital Marketing [cite: 12]</span>
-            <span class="skill-tag">Leadership [cite: 15]</span>
-            <span class="skill-tag">Critical Thinking [cite: 14]</span>
-            <span class="skill-tag">Technical Training [cite: 30]</span>
-            <span class="skill-tag">Workflow Automation [cite: 31]</span>
+        <div class="skills-categories">
+            <div class="skill-category">
+                <div class="category-label">// ERP & Systems</div>
+                <div class="skill-list">
+                    <span class="skill-tag">Odoo ERP</span>
+                    <span class="skill-tag">Module Development</span>
+                    <span class="skill-tag">System Administration</span>
+                    <span class="skill-tag">Workflow Automation</span>
+                    <span class="skill-tag">Data Migration</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <div class="category-label">// Development</div>
+                <div class="skill-list">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">XML / QWeb</span>
+                    <span class="skill-tag">PostgreSQL</span>
+                    <span class="skill-tag">HTML / CSS</span>
+                    <span class="skill-tag">JavaScript</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <div class="category-label">// Infrastructure</div>
+                <div class="skill-list">
+                    <span class="skill-tag">Linux Server</span>
+                    <span class="skill-tag">Network Admin</span>
+                    <span class="skill-tag">Email Systems</span>
+                    <span class="skill-tag">IT Security</span>
+                    <span class="skill-tag">Technical Support</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <div class="category-label">// Soft Skills</div>
+                <div class="skill-list">
+                    <span class="skill-tag">Leadership</span>
+                    <span class="skill-tag">Critical Thinking</span>
+                    <span class="skill-tag">Technical Training</span>
+                    <span class="skill-tag">Digital Marketing</span>
+                    <span class="skill-tag">Graphic Design</span>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section id="education">
+    <!-- ── EDUCATION ── -->
+    <section id="education" class="fade-in">
         <h2 class="section-title">Education</h2>
-        <div class="card" style="display: flex; align-items: center; gap: 2rem;">
-            <i class="fas fa-graduation-cap" style="font-size: 2rem; color: var(--accent);"></i>
+        <div class="edu-card">
+            <i class="fas fa-graduation-cap" style="font-size: 2.5rem; color: var(--accent); flex-shrink:0;"></i>
             <div>
                 <h3>Bachelor of Information Technology</h3>
-                <p style="color: var(--text-dim);">Info-Link University College [cite: 7]</p>
-                <p class="mono">2018 - 2021 [cite: 8]</p>
+                <p style="color: var(--text-dim); margin-top:0.3rem;">Info-Link University College</p>
+                <span class="mono" style="margin-top:0.5rem;display:block;">2018 – 2021</span>
             </div>
         </div>
     </section>
 
-    <footer style="padding: 4rem 5%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-dim); font-size: 0.8rem;">
-        <p>© 2026 SISAY BARANA. Built with Modern Standards.</p>
-        <p style="margin-top: 0.5rem;">+251 936481454 | +251 952724884 [cite: 19]</p>
+    <!-- ── CONTACT ── -->
+    <section id="contact" class="fade-in">
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-grid">
+            <div>
+                <p style="color:var(--text-dim);margin-bottom:2rem;font-size:0.9rem;">Available for freelance projects, collaborations, and full-time opportunities. Let's build something great.</p>
+                <div class="contact-methods">
+                    <a href="mailto:sisaybarana@gmail.com" class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="contact-text">
+                            <span class="contact-label">Email</span>
+                            <span class="contact-value">sisaybarana@gmail.com</span>
+                        </div>
+                    </a>
+                    <a href="tel:+251936481454" class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div class="contact-text">
+                            <span class="contact-label">Phone</span>
+                            <span class="contact-value">+251 936 481 454</span>
+                        </div>
+                    </a>
+                    <a href="tel:+251952724884" class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div class="contact-text">
+                            <span class="contact-label">Phone 2</span>
+                            <span class="contact-value">+251 952 724 884</span>
+                        </div>
+                    </a>
+                    <a href="https://www.linkedin.com/in/sisay-barana" target="_blank" class="contact-item">
+                        <i class="fab fa-linkedin"></i>
+                        <div class="contact-text">
+                            <span class="contact-label">LinkedIn</span>
+                            <span class="contact-value">linkedin.com/in/sisay-barana</span>
+                        </div>
+                    </a>
+                    <div class="contact-item" style="cursor:default;">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="contact-text">
+                            <span class="contact-label">Location</span>
+                            <span class="contact-value">Addis Ababa, Ethiopia</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="contact-form">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" placeholder="Your full name" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="your@email.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea rows="5" placeholder="Tell me about your project or opportunity..."></textarea>
+                    </div>
+                    <button class="btn-send" onclick="handleSend()">
+                        <i class="fas fa-paper-plane"></i> SEND MESSAGE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <div class="footer-social">
+            <a href="https://www.linkedin.com/in/sisay-barana" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="mailto:sisaybarana@gmail.com"><i class="fas fa-envelope"></i></a>
+            <a href="tel:+251936481454"><i class="fas fa-phone"></i></a>
+        </div>
+        <p>© 2026 SISAY BARANA — System Administrator & ERP Specialist</p>
+        <p style="margin-top:0.4rem; font-size:0.75rem;">+251 936 481 454 &nbsp;|&nbsp; +251 952 724 884 &nbsp;|&nbsp; Addis Ababa, Ethiopia</p>
     </footer>
 
+    <script>
+        // Hamburger menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            mobileMenu.classList.toggle('open');
+        });
+        function closeMobile() {
+            hamburger.classList.remove('open');
+            mobileMenu.classList.remove('open');
+        }
+
+        // Scroll fade-in
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Active nav link highlight on scroll
+        const sections = document.querySelectorAll('section, main');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+            navLinks.forEach(a => {
+                a.style.color = '';
+                if (a.getAttribute('href') === '#' + current) a.style.color = 'var(--accent)';
+            });
+        });
+
+        // Banner upload
+        document.getElementById('bannerInput').addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const preview = document.getElementById('bannerPreview');
+                const placeholder = document.getElementById('bannerPlaceholder');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Contact form — mailto fallback
+        function handleSend() {
+            const name = document.querySelector('.contact-form input[type="text"]').value;
+            const email = document.querySelector('.contact-form input[type="email"]').value;
+            const msg = document.querySelector('.contact-form textarea').value;
+            if (!name || !email || !msg) { alert('Please fill in all fields.'); return; }
+            const subject = encodeURIComponent('Portfolio Inquiry from ' + name);
+            const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + msg);
+            window.open('mailto:sisaybarana@gmail.com?subject=' + subject + '&body=' + body);
+        }
+    </script>
 </body>
 </html>
